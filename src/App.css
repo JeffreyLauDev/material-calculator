@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+#root{
+  background: black;
+}
+
+h3 {
+  color: white !important;
+}
+.button-orange{
+  background-color:#F1A43C !important;
+  color:white !important;
+}
+
+.button-dark{
+  background-color:#333333 !important;
+  color:white !important;
+}
+.button-grey{
+  background-color:#A5A5A5 !important;
+}
+
+button.MuiButtonBase-root.MuiIconButton-root {
+  width: 100%;
+  border-radius: 43px !important;
+  height: 66px;
+}
