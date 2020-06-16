@@ -1,10 +1,21 @@
+## Iphone Clone calculator
 
-##Create a react app
-npm init react-app  material-calculator
-cd material-calculator
+This project is just clone iphone calculator
 
-##Github init
-git init
+## Installation and Setup Instructions
 
-##Install Material UI
-npm install @material-ui/core
+Installation:
+
+`npm install`  
+
+To Run build:  
+
+`serve -s build`  
+
+To Start Server:
+
+`npm start`  
+
+To Visit App:
+
+`localhost:3000/ideas`  
