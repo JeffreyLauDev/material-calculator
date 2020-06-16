@@ -2,6 +2,10 @@
 
 This project is just clone iphone calculator
 
+## Screenshot
+
+![Screenshot](screenshot.jpg)
+
 ## Installation and Setup Instructions
 
 Installation:
