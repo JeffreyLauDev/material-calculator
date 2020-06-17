@@ -7,20 +7,21 @@ import CButton from './components/CButton';
 
 
 
-Number.prototype.countDecimals = function () {
-  if (Math.floor(this.valueOf()) === this.valueOf()) return 0;
-  return this.toString().split(".")[1].length || 0;
+var countDecimals = function (value) {
+  if (Math.floor(value) === value) return 0;
+  return value.toString().split(".")[1].length || 0;
 }
+
 class App extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      total: 0,
-      num2: null,
-      sign: null,
+      total: 2.3,
+      num2: 0.3,
+      sign: "-",
       laststep: null,
-      show: 0
+      show: 0.3
     };
   }
   showScreen = () => {
@@ -33,6 +34,7 @@ class App extends React.Component {
   clickButton = value => {
     // this.calculate(value);
     var { total, num2, sign } = this.state;
+    total = Number(total);
     var selectedValue = sign === null ? "total" : "num2";
 
     //INPUT IS AC
@@ -49,7 +51,7 @@ class App extends React.Component {
     if (!isNaN(Number(value))) {
 
       //SELECTED VALUE IS CLEAR
-      if (this.state[selectedValue] === 0) {
+      if (this.state[selectedValue] === 0 || this.state[selectedValue] === null) {
         this.setState({
           [selectedValue]: Number(value),
         }, () => this.showScreen());
@@ -59,16 +61,24 @@ class App extends React.Component {
       else {
         var selectedValueSign = Math.sign(this.state[selectedValue]) === -1 ? -1 : 1;
         //DECIMAL NUMBER
-        if (!total.toString().includes(".")) {
+        if (!this.state[selectedValue].toString().includes(".")) {
           this.setState({
             [selectedValue]: this.state[selectedValue] * 10 + Number(value) * selectedValueSign,
           }, () => this.showScreen());
         }
         //FLOAT NUMBER
         else {
-          this.setState({
-            [selectedValue]: this.state[selectedValue] + Number(value) * selectedValueSign * 1 / Math.pow(10, total.countDecimals() + 1),
-          }, () => this.showScreen());
+          if (Number(this.state[selectedValue]) * 10 % 10 === 0) {
+            this.setState({
+              [selectedValue]: Number(this.state[selectedValue]) + Number(value) * selectedValueSign * 1 / Math.pow(10, countDecimals(this.state[selectedValue])),
+            }, () => this.showScreen());
+          }
+          else {
+            this.setState({
+              [selectedValue]: (Number(value) * selectedValueSign * 1 / Math.pow(10, countDecimals(this.state[selectedValue]) + 1) + Number(this.state[selectedValue])).toFixed(countDecimals(this.state[selectedValue]) + 1),
+            }, () => this.showScreen());
+          }
+
         }
 
       }
@@ -81,38 +91,41 @@ class App extends React.Component {
       if (num2 == null) {
         this.setState({
           sign: value,
+
         })
       }
       else {
         switch (sign) {
           case '+':
-            this.setState({ total: total + num2 }, () => this.showScreen());
+            console.log("hi");
+            this.setState({ total: total + num2, sign: value, num2: null }, () => this.showScreen());
             break;
           case '-':
-            this.setState({ total: total - num2 }, () => this.showScreen());
+            this.setState({ total: total - num2, sign: value, num2: null }, () => this.showScreen());
             break;
           case '×':
-            this.setState({ total: total * num2 }, () => this.showScreen());
+            this.setState({ total: total * num2, sign: value, num2: null }, () => this.showScreen());
             break;
           case '÷':
             if (num2 === 0) {
-              this.setState({ total: "Can't divide by zero" }, () => this.showScreen());
+              this.setState({ total: "Can't divide by zero", sign: value, num2: null }, () => this.showScreen());
             }
             else {
-              this.setState({ total: total / num2 }, () => this.showScreen());
+              this.setState({ total: total / num2, sign: value, num2: null }, () => this.showScreen());
             }
-
             break;
           case '=':
-            this.setState({ total: total }, () => this.showScreen());
+
+            this.setState({ total: total, sign: null, num2: null }, () => this.showScreen());
             break;
           case 'AC':
 
             break;
           default:
         }
-        this.setState({ sign: value, num2: null });
-
+        if (value === "=") {
+          this.setState({ sign: null });
+        }
       }
     }
 
@@ -120,18 +133,21 @@ class App extends React.Component {
     else {
       switch (value) {
         case '+/-':
-          this.setState({ total: total * -1 }, () => this.showScreen());
+          this.setState({ [selectedValue]: this.state[selectedValue] * -1 }, () => this.showScreen());
           break;
         case '%':
-          this.setState({ total: total * 0.01 }, () => this.showScreen());
+          this.setState({ [selectedValue]: this.state[selectedValue] * 0.01 }, () => this.showScreen());
           break;
         case '.':
-          this.setState({ total: (total * 1.0).toFixed(1) }, () => this.showScreen());
+          this.setState({ [selectedValue]: (this.state[selectedValue] * 1.0).toFixed(1) }, () => this.showScreen());
           break;
 
         default:
       }
-      this.setState({ sign: null, num2: null });
+      if (selectedValue === "total") {
+        this.setState({ sign: null, num2: null });
+      }
+
     }
 
 
